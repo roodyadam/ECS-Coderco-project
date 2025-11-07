@@ -10,6 +10,6 @@ output "record_fqdn" {
 
 output "certificate_validation_arn" {
   description = "ARN of the validated certificate (currently disabled - validation happens manually)"
-  value       = ""  # Validation is handled manually to avoid Terraform dependency issues
+  value       = "" # Validation is handled manually to avoid Terraform dependency issues
 }
 

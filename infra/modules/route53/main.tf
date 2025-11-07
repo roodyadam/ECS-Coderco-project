@@ -1,9 +1,9 @@
 # Normalize domain name - ensure it has trailing dot for Route53 lookup
 locals {
   # Remove trailing dot if present, then add it back to ensure consistency
-  domain_clean = replace(var.domain_name, "/\\.$/", "")
+  domain_clean           = replace(var.domain_name, "/\\.$/", "")
   domain_name_normalized = "${local.domain_clean}."
-  
+
   # Use provided zone_id if available, otherwise lookup by name
   zone_id = var.hosted_zone_id != "" ? var.hosted_zone_id : data.aws_route53_zone.main[0].zone_id
 }
@@ -51,7 +51,7 @@ resource "aws_route53_record" "alb" {
   zone_id         = local.zone_id
   name            = var.subdomain != "" ? "${var.subdomain}.${var.domain_name}" : var.domain_name
   type            = "A"
-  allow_overwrite = true  # Allow overwriting existing records in case of duplicate zones
+  allow_overwrite = true # Allow overwriting existing records in case of duplicate zones
 
   alias {
     name                   = var.alb_dns_name

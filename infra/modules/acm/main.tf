@@ -1,7 +1,7 @@
 # Use existing certificate if provided, otherwise create a new one
 resource "aws_acm_certificate" "this" {
-  count            = var.existing_certificate_arn == "" ? 1 : 0
-  domain_name      = var.domain_name
+  count             = var.existing_certificate_arn == "" ? 1 : 0
+  domain_name       = var.domain_name
   validation_method = "DNS"
 
   subject_alternative_names = [

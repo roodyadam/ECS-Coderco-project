@@ -5,8 +5,8 @@ aws_region = "eu-west-2"
 project_name = "aimapp"
 
 # Domain Configuration
-domain_name = "roodyadamsapp.com"  
-subdomain   = "tm"           
+domain_name = "roodyadamsapp.com"
+subdomain   = "tm"
 
 # Container Configuration
 container_port   = 80

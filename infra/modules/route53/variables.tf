@@ -26,10 +26,10 @@ variable "alb_zone_id" {
 
 variable "certificate_domain_validation_options" {
   description = "Domain validation options from ACM certificate"
-  type        = list(object({
+  type = list(object({
     domain_name           = string
-    resource_record_name = string
-    resource_record_type = string
+    resource_record_name  = string
+    resource_record_type  = string
     resource_record_value = string
   }))
   default = []
