@@ -143,3 +143,4 @@ To manually trigger a deployment:
 - No static credentials stored in GitHub
 - All AWS API calls are authenticated via OIDC tokens
 
+
