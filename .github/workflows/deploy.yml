@@ -221,22 +221,37 @@ jobs:
           echo "Starting health check for: https://${APP_URL}/status"
           
           # Test DNS resolution first
-          if ! nslookup ${APP_URL} > /dev/null 2>&1; then
-            echo "⚠️  Warning: DNS resolution failed for ${APP_URL}"
-            echo "This might be a DNS propagation issue. Continuing with health checks..."
-          else
+          echo "Testing DNS resolution..."
+          if nslookup ${APP_URL} 2>&1 | grep -q "Name:"; then
             echo "✅ DNS resolution successful"
+            nslookup ${APP_URL} | head -5
+          else
+            echo "⚠️  Warning: DNS resolution failed for ${APP_URL}"
+            echo "This might be a DNS propagation issue. Will continue with health checks..."
           fi
           
           while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
             RETRY_COUNT=$((RETRY_COUNT + 1))
             
-            # Try with verbose output to see what's happening
-            HTTP_CODE=$(curl -s -o /tmp/health_response.txt -w "%{http_code}" \
-              --max-time 10 \
-              --connect-timeout 5 \
-              -k \
-              https://${APP_URL}/status 2>&1 || echo "000")
+            echo ""
+            echo "=== Health Check Attempt $RETRY_COUNT/$MAX_RETRIES ==="
+            
+            # Try with verbose output and follow redirects
+            HTTP_CODE=$(curl -s -L -o /tmp/health_response.txt -w "%{http_code}" \
+              --max-time 15 \
+              --connect-timeout 10 \
+              --retry 2 \
+              --retry-delay 3 \
+              https://${APP_URL}/status 2>&1 | tail -1 || echo "000")
+            
+            # Also try the root URL as fallback
+            if [ "$HTTP_CODE" = "000" ] || [ "$HTTP_CODE" = "" ]; then
+              echo "Trying root URL as fallback..."
+              HTTP_CODE=$(curl -s -L -o /tmp/health_response.txt -w "%{http_code}" \
+                --max-time 15 \
+                --connect-timeout 10 \
+                https://${APP_URL}/ 2>&1 | tail -1 || echo "000")
+            fi
             
             # Check the response content too
             if [ -f /tmp/health_response.txt ]; then
