@@ -131,38 +131,52 @@ jobs:
           tflint
         continue-on-error: true  # Don't fail pipeline on linting issues
 
-      - name: Terraform Plan
-        id: plan
-        run: |
-          cd infra
-          terraform plan -out=tfplan \
-            -var="image_tag=${{ needs.build-and-push.outputs.sha }}"
-        continue-on-error: true
-
-      - name: Terraform Plan Status
-        if: steps.plan.outcome == 'failure'
-        run: |
-          echo "Terraform plan failed!"
-          exit 1
-
-      - name: Terraform Apply
+      # Skip Terraform Plan/Apply since infrastructure is managed locally
+      # Only update ECS service with new image and task definition
+      - name: Update ECS Task Definition with New Image
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          cd infra
-          terraform apply -auto-approve tfplan
-
-      # Update ECS service with new image
-      - name: Update ECS Service
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: |
-          cd infra
-          CLUSTER=$(terraform output -raw ecs_cluster_name)
-          SERVICE=$(terraform output -raw ecs_service_name)
+          # Get ECS cluster and service names
+          CLUSTER="aimapp-cluster"
+          SERVICE="aimapp-service"
+          
+          # Get current task definition
+          TASK_DEF=$(aws ecs describe-services \
+            --cluster $CLUSTER \
+            --services $SERVICE \
+            --region ${{ env.AWS_REGION }} \
+            --query 'services[0].taskDefinition' \
+            --output text)
+          
+          # Get task definition details
+          aws ecs describe-task-definition \
+            --task-definition $TASK_DEF \
+            --region ${{ env.AWS_REGION }} \
+            --query 'taskDefinition' > /tmp/task-def.json
+          
+          # Update image tag in task definition
+          ECR_REPO="147923156682.dkr.ecr.eu-west-2.amazonaws.com/aimapp-repo"
+          NEW_IMAGE="$ECR_REPO:${{ needs.build-and-push.outputs.sha }}"
+          
+          # Update task definition with new image
+          cat /tmp/task-def.json | jq ".containerDefinitions[0].image = \"$NEW_IMAGE\"" > /tmp/new-task-def.json
+          
+          # Register new task definition
+          aws ecs register-task-definition \
+            --cli-input-json file:///tmp/new-task-def.json \
+            --region ${{ env.AWS_REGION }} > /tmp/new-task-def-arn.json
+          
+          NEW_TASK_DEF=$(cat /tmp/new-task-def-arn.json | jq -r '.taskDefinition.taskDefinitionArn')
+          echo "New task definition: $NEW_TASK_DEF"
+          
+          # Update ECS service to use new task definition
           aws ecs update-service \
             --cluster $CLUSTER \
             --service $SERVICE \
-            --force-new-deployment \
+            --task-definition $NEW_TASK_DEF \
             --region ${{ env.AWS_REGION }}
+          
+          echo "ECS service updated with new image: $NEW_IMAGE"
 
   # Job 3: Post-Deploy Health Check
   health-check:
