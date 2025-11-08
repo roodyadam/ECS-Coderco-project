@@ -11,7 +11,6 @@ module "ecr" {
 }
 
 # ACM Certificate Module
-# Using existing validated certificate to avoid validation issues
 module "acm" {
   source                   = "./modules/acm"
   domain_name              = var.domain_name
@@ -20,7 +19,6 @@ module "acm" {
 }
 
 # ALB Module
-# Note: Certificate will be validated by Route53 module after DNS records are created
 module "alb" {
   source          = "./modules/alb"
   project_name    = var.project_name
@@ -57,9 +55,6 @@ module "ecs" {
 }
 
 # Route53 Module
-# Zone 1 (Z06988621L4AI5LXY4AF3) - This is the ONLY and CORRECT zone
-# Domain registrar points to this zone's nameservers
-# DO NOT CHANGE THIS - nameservers are permanent and correct
 module "route53" {
   source                                = "./modules/route53"
   domain_name                           = var.domain_name

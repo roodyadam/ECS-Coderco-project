@@ -11,9 +11,8 @@ variable "project_name" {
 }
 
 variable "domain_name" {
-  description = "Your domain name (e.g., example.com)"
+  description = "Your domain name"
   type        = string
-  # You MUST set this! e.g., "yourdomain.com"
 }
 
 variable "subdomain" {

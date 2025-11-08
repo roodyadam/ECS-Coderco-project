@@ -12,7 +12,7 @@ env:
   TFLINT_VERSION: v0.50.0
 
 jobs:
-  # Job 1: Build & Push Docker Image
+  # Job 1: Build & Push Docker Image to ECR
   build-and-push:
     name: Build & Push to ECR
     runs-on: ubuntu-latest
@@ -69,7 +69,7 @@ jobs:
           cache-from: type=registry,ref=${{ steps.ecr.outputs.repository }}:buildcache
           cache-to: type=registry,ref=${{ steps.ecr.outputs.repository }}:buildcache,mode=max
 
-  # Job 2: Terraform Deploy (runs after build)
+  # Job 2: Terraform Deploy 
   terraform-deploy:
     name: Terraform Deploy
     runs-on: ubuntu-latest
@@ -129,12 +129,9 @@ jobs:
           cd infra
           tflint --init
           tflint
-        continue-on-error: true  # Don't fail pipeline on linting issues
+        continue-on-error: true  
 
-      # Note: Terraform Plan/Apply are skipped because infrastructure is managed locally
-      # Terraform state is not shared between local and CI/CD
-      # Instead, we update ECS service directly with new image SHA
-      # Update ECS task definition with new image SHA and redeploy service
+     
       - name: Update ECS Task Definition with SHA Tag
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |

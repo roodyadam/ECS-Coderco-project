@@ -1,4 +1,4 @@
-# Use existing certificate if provided, otherwise create a new one
+
 resource "aws_acm_certificate" "this" {
   count             = var.existing_certificate_arn == "" ? 1 : 0
   domain_name       = var.domain_name
@@ -17,5 +17,5 @@ resource "aws_acm_certificate" "this" {
   }
 }
 
-# Certificate validation will be handled by Route53 module after DNS records are created
+
 

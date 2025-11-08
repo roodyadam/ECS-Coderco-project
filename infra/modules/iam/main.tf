@@ -140,12 +140,12 @@ resource "aws_iam_role_policy" "github_actions_full_access" {
           "acm:*",
           # Route53 permissions
           "route53:*",
-          # S3 permissions (for Terraform state if using S3 backend)
+          # S3 permissions 
           "s3:GetObject",
           "s3:PutObject",
           "s3:ListBucket",
           "s3:DeleteObject",
-          # DynamoDB permissions (for Terraform state locking)
+          # DynamoDB permissions 
           "dynamodb:GetItem",
           "dynamodb:PutItem",
           "dynamodb:DeleteItem",

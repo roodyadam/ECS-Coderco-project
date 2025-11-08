@@ -5,7 +5,7 @@
 *.tfplan
 .terraform.lock.hcl
 
-# Terraform provider binaries (already in .terraform/)
+# Terraform provider binaries 
 infra/.terraform/providers/
 
 # OS files
