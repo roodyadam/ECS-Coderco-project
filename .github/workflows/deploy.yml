@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:  # Manual trigger on Github actions 
+  workflow_dispatch:  # Manual triger 
 
 env:
   AWS_REGION: eu-west-2
