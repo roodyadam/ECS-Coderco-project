@@ -12,6 +12,7 @@ resource "aws_security_group" "ecs_sg" {
   }
 
   egress {
+    description = "Allow all outbound traffic"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -25,6 +26,11 @@ resource "aws_security_group" "ecs_sg" {
 
 resource "aws_ecs_cluster" "this" {
   name = "${var.project_name}-cluster"
+
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
 }
 
 resource "aws_ecs_task_definition" "app" {

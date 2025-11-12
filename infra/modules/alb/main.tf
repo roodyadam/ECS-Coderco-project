@@ -20,6 +20,7 @@ resource "aws_security_group" "alb_sg" {
   }
 
   egress {
+    description = "Allow all outbound traffic"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -36,6 +37,7 @@ resource "aws_lb" "this" {
   load_balancer_type = "application"
   subnets            = var.subnet_ids
   security_groups    = [aws_security_group.alb_sg.id]
+  drop_invalid_header_fields = true
 
   tags = {
     Name = "${var.project_name}-alb"

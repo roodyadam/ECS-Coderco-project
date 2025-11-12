@@ -1,1 +1,0 @@
-# No outputs needed - DNS record is created for internal use

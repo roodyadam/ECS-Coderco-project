@@ -1,22 +1,18 @@
-# VPC Module
 module "vpc" {
   source       = "./modules/vpc"
   project_name = var.project_name
 }
 
-# ECR Module
 module "ecr" {
   source       = "./modules/ecr"
   project_name = var.project_name
 }
 
-# ACM Certificate Module
 module "acm" {
   source          = "./modules/acm"
   certificate_arn = var.certificate_arn
 }
 
-# ALB Module
 module "alb" {
   source          = "./modules/alb"
   project_name    = var.project_name
@@ -25,14 +21,12 @@ module "alb" {
   certificate_arn = module.acm.certificate_arn
 }
 
-# IAM Module
 module "iam" {
   source       = "./modules/iam"
   project_name = var.project_name
   github_repo  = var.github_repo
 }
 
-# ECS Module
 module "ecs" {
   source             = "./modules/ecs"
   project_name       = var.project_name
@@ -51,7 +45,6 @@ module "ecs" {
   image_tag          = var.image_tag
 }
 
-# Route53 Module
 module "route53" {
   source         = "./modules/route53"
   domain_name    = var.domain_name

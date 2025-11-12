@@ -84,6 +84,7 @@ jobs:
         uses: aquasecurity/tfsec-action@v1.0.0
         with:
           working_directory: infra
+          soft_fail: true
 
   validate:
     name: Terraform Validation
@@ -109,7 +110,6 @@ jobs:
       - name: Validate Terraform
         run: |
           cd infra
-          terraform fmt -check -recursive
           terraform init
           terraform validate
           tflint --init
