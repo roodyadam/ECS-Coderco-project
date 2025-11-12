@@ -16,7 +16,7 @@ container_memory = 512
 # ECS Configuration
 desired_count = 1
 
-github_repo = "roodyadam/ECS-Coderco-project"
+github_repo = "roodyadam/aim-ecs-project"
 
 # SSL Certificate
 certificate_arn = "arn:aws:acm:eu-west-2:147923156682:certificate/afd13bd7-da22-443a-a567-8ae7f04c7009"
