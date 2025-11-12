@@ -1,5 +1,5 @@
 # Builder stage - compiles Cython extensions
-FROM python:3.9-slim-bookworm as builder
+FROM python:3.9-slim-bookworm AS builder
 
 WORKDIR /app
 

@@ -17,9 +17,38 @@ env:
   TFLINT_VERSION: v0.50.0
 
 jobs:
+  create-ecr:
+    name: Create ECR Repository
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Create ECR Repository
+        run: |
+          cd infra
+          terraform init
+          terraform apply -target=module.ecr -auto-approve
+
   build:
     name: Build Docker Image
     runs-on: ubuntu-latest
+    needs: create-ecr
     permissions:
       id-token: write
       contents: read
