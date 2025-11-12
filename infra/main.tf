@@ -1,5 +1,13 @@
 terraform {
   required_version = ">= 1.6.0"
+
+  backend "s3" {
+    bucket         = "aimapp-terraform-state-147923156682"
+    key            = "infrastructure/terraform.tfstate"
+    region         = "eu-west-2"
+    dynamodb_table = "terraform-state-lock"
+    encrypt        = true
+  }
 }
 
 module "vpc" {

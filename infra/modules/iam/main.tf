@@ -138,7 +138,13 @@ resource "aws_iam_role_policy" "github_actions" {
           "route53:GetChange",
           "route53:GetHostedZone",
           "route53:ListResourceRecordSets",
-          "elasticloadbalancing:*"
+          "elasticloadbalancing:*",
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:ListBucket",
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:DeleteItem"
         ]
         Resource = "*"
       }
