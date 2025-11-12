@@ -128,6 +128,7 @@ resource "aws_iam_role_policy" "github_actions" {
           "iam:CreateOpenIDConnectProvider",
           "iam:DeleteOpenIDConnectProvider",
           "iam:GetOpenIDConnectProvider",
+          "iam:TagOpenIDConnectProvider",
           "iam:TagRole",
           "iam:UntagRole",
           "iam:PassRole",
@@ -135,6 +136,7 @@ resource "aws_iam_role_policy" "github_actions" {
           "acm:DescribeCertificate",
           "route53:ChangeResourceRecordSets",
           "route53:GetChange",
+          "route53:GetHostedZone",
           "route53:ListResourceRecordSets",
           "elasticloadbalancing:*"
         ]
