@@ -193,7 +193,4 @@ jobs:
       - name: Deployment summary
         run: |
           echo "## Deployment Status" >> $GITHUB_STEP_SUMMARY
-          echo "**Application:** https://${{ env.APP_URL }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Image SHA:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Cluster:** ${{ env.ECS_CLUSTER }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Service:** ${{ env.ECS_SERVICE }}" >> $GITHUB_STEP_SUMMARY
+          echo "Website successfully running: https://${{ env.APP_URL }}" >> $GITHUB_STEP_SUMMARY
