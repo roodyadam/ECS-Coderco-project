@@ -1,12 +1,12 @@
-# Builder stage - compiles Cython extensions
+# builder stage
 FROM python:3.11-slim-bookworm AS builder
 
 WORKDIR /app
 
-# Install build tools for compiling Cython
+
 RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
 
-# Install Cython and dependencies, then install package
+
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir "Cython==3.0.10" "aimrocks==0.5.*"
 
@@ -14,10 +14,10 @@ COPY . .
 
 RUN pip install --no-cache-dir .
 
-# Runtime stage - minimal image
+# Runtime stage 
 FROM python:3.11-slim-bookworm
 
-# Copy compiled packages and CLI from builder
+
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
