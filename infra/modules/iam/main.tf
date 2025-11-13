@@ -142,9 +142,12 @@ resource "aws_iam_role_policy" "github_actions" {
           "s3:GetObject",
           "s3:PutObject",
           "s3:ListBucket",
+          "s3:HeadBucket",
           "dynamodb:GetItem",
           "dynamodb:PutItem",
-          "dynamodb:DeleteItem"
+          "dynamodb:DeleteItem",
+          "dynamodb:DescribeTable",
+          "dynamodb:UpdateItem"
         ]
         Resource = "*"
       }

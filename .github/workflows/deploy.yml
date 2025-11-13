@@ -41,10 +41,16 @@ jobs:
       - name: Validate Terraform
         run: |
           cd infra
-          terraform init
+          terraform init -backend=false
           terraform validate
           tflint --init
           tflint
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Scan Terraform with TfSec
         uses: aquasecurity/tfsec-action@v1.0.0
